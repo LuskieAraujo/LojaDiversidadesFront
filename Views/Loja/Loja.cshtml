@@ -1,0 +1,18 @@
+﻿@{
+	ViewData["Title"] = "Loja";
+}
+<div class="text-center">
+	<h1 class="display-4">Pedido</h1>
+</div>
+<form class="row g-3">
+	<input type="hidden" id="idProduto" />
+	<div class="col-4 offset-md-2">
+		<input class="form-control" type="text" id="txtNomeCliente" placeholder="Cliente" />
+	</div>
+	<div class="col-2">
+		<input class="form-control" type="date" id="txtDataPedido" placeholder="Data do Pedido" />
+	</div>
+	<div class="col-2">
+		<input class="form-control" id="txtTotal" placeholder="Valor total" type="text" disabled />
+	</div>
+</form>

@@ -1,0 +1,60 @@
+﻿@using System.Data;
+@using LojaDiversidadesFront.Controllers;
+@{
+	ViewData["Title"] = "Estoque";
+}
+<div class="text-center">
+	<h1 class="display-4">Estoque</h1>
+</div>
+<form>
+	<div class="row">
+		<input type="hidden" id="idProduto" />
+		<div class="col-3">
+			<input class="form-control" type="text" id="txtNomeProduto" placeholder="Nome" />
+		</div>
+		<div class="col-2">
+			<input class="form-control" id="txtQuantidadeProduto" placeholder="Quantidade" type="text" />
+		</div>
+		<div class="col-2">
+			<input class="form-control" id="txtPrecoProduto" placeholder="Preço" type="text" />
+		</div>
+		<div class="col-5">
+			<textarea class="form-control" id="txtDescricaoProduto" placeholder="Descrição"></textarea>
+		</div>
+	</div>
+	<br />
+	<div class="row">
+		<div class="btn-group col-3 offset-9">
+			<button type="button" id="btnIncluirItemPedido" class="btn btn-success">Adicionar</button>
+			<button type="button" id="btnExcluirItemPedido" class="btn btn-danger">Remover</button>
+		</div>
+	</div>
+</form>
+<table class="table table-bordered table-hover" id="tbl">
+	<thead>
+		<tr>
+			<th hidden scope="col">id</th>
+			<th scope="col">Nome</th>
+			<th scope="col">Preço</th>
+			<th scope="col">Quantidade</th>
+			<th scope="col">Descrição</th>
+			<th scope="col">Ações</th>
+		</tr>
+	</thead>
+	<tbody class="table-group-divider">
+		@*@foreach(DataTable p in new LojaController().PreencherGridEstoque().Value)
+		{
+			<tr>
+				<td hidden>@p.Id.ToString()</td>
+				<td>@p.Name</td>
+				<td>@p.Price.ToString()</td>
+				<td>@p.Quantity.ToString()</td>
+				<td>@p.Description</td>
+				<td>
+					<button type="button" class="btn btn-info">Alterar</button>
+				</td>
+			</tr>
+		}*@
+
+	</tbody>
+</table>
