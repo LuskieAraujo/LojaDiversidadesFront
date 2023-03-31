@@ -1,0 +1,128 @@
+﻿@using System.Data;
+@model IEnumerable<Product>;
+
+@{
+	ViewData["Title"] = "Estoque";
+}
+
+<div class="text-center">
+	<h1 class="display-4">Estoque</h1>
+</div>
+<form>
+	@*<button type="button" action="AdicionarProduto" id="btnIncluirItemPedido" class="btn btn-success">Adicionar</button>*@
+	<button type="button" id="btnIncluirItemPedido" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProduto">Adicionar</button>
+</form>
+<br />
+<table class="table table-bordered table-hover" id="tbl">
+	<thead>
+		<tr>
+			<th scope="col" hidden>id</th>
+			<th scope="col" hidden>ativo</th>
+			<th scope="col">Nome</th>
+			<th scope="col">Preço</th>
+			<th scope="col">Quantidade (Un.)</th>
+			<th scope="col">Descrição</th>
+			<th scope="col">Ações</th>
+		</tr>
+	</thead>
+	<tbody class="table-group-divider">
+		@foreach (var linha in Model)
+		{
+			<tr>
+				<td hidden>@linha.Id</td>
+				<td hidden>@linha.IsActive</td>
+				<td>@linha.Name</td>
+				<td>@linha.Price.ToString("C")</td>
+				<td>@linha.Quantity</td>
+				<td>@linha.Description</td>
+				<td>
+					<button type="button" class="btn btn-primary" @*data-bs-toggle="modal"*@ @*data-bs-target="#modalProduto"*@ onclick="AbrirModal()" data-id="@linha.Id"
+						data-name="@linha.Name" data-price="@linha.Price" data-quantity="@linha.Quantity" data-description="@linha.Description" data-active="@linha.IsActive">Alterar</button>
+					<button type="button" class="btn btn-danger">Excluir</button>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<div class="modal fade" id="modalProduto">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Produto</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+			</div>
+			<div class="modal-body">
+				<div class="mb-3">
+					<input type="hidden" id="hddnId" />
+					<div class="col-12">
+						<input class="form-control" type="text" id="txtNomeProduto" placeholder="Nome" value="" />
+					</div>
+				</div>
+				<div class="mb-3">
+					<div class="col-3">
+						<input class="form-control" id="txtQuantidadeProduto" placeholder="Quantidade" type="number" />
+					</div>
+					<div class="col-3">
+						<input class="form-control" id="txtPrecoProduto" placeholder="Preço" type="text" />
+					</div>
+				</div>
+				<div class="mb-3">
+					<div class="col-6">
+						<textarea class="form-control" id="txtDescricaoProduto" placeholder="Descrição"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary">Salvar</button>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section scripts{
+	<script>
+		function transportarDadosModal(){
+			//var id = $(this).attr("data-id");
+			//var name = $(this).attr("data-name");
+			//var price = $(this).attr("data-price");
+			//var quantity = $(this).attr("data-quantity");
+			//var description = $(this).attr("data-description");
+			//var active = $(this).attr("data-active");
+
+			document.getElementById("hddnId").val($(this).attr("data-id"));
+			document.getElementById("txtNomeProduto").val($(this).attr("data-name"));
+			document.getElementById("txtQuantidadeProduto").val($(this).attr("data-quantity"));
+			document.getElementById("txtPrecoProduto").val($(this).attr("data-price"));
+			document.getElementById("txtDescricaoProduto").val($(this).attr("data-description"));
+		}
+
+
+
+
+		$(function () {
+			$(".edit").click(function () {
+				var id = $(this).attr("data-id");
+				alert(id);
+				$("#modal").load("Edit?id=" + id, function () {
+					$("#modal").modal();
+				})
+			});
+
+			$(".delete").click(function () {
+				var id = $(this).attr("data-id");
+				alert(id);
+				$("#modal").load("Delete?id=" + id, function () {
+					$("#modal").modal();
+				})
+			});
+
+			$(".create").click(function () {
+				$("#modal").load("Create", function () {
+					$("#modal").modal();
+				})
+			});
+		})
+	</script>
+}
