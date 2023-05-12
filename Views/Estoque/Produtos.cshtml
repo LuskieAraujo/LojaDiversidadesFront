@@ -2,127 +2,196 @@
 @model IEnumerable<Product>;
 
 @{
-	ViewData["Title"] = "Estoque";
+    ViewData["Title"] = "Estoque";
 }
 
 <div class="text-center">
-	<h1 class="display-4">Estoque</h1>
+    <h1 class="display-4">Estoque</h1>
 </div>
 <form>
-	@*<button type="button" action="AdicionarProduto" id="btnIncluirItemPedido" class="btn btn-success">Adicionar</button>*@
-	<button type="button" id="btnIncluirItemPedido" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProduto">Adicionar</button>
+    <button type="button" id="btnIncluirProduto" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProduto">Adicionar</button>
 </form>
 <br />
 <table class="table table-bordered table-hover" id="tbl">
-	<thead>
-		<tr>
-			<th scope="col" hidden>id</th>
-			<th scope="col" hidden>ativo</th>
-			<th scope="col">Nome</th>
-			<th scope="col">Preço</th>
-			<th scope="col">Quantidade (Un.)</th>
-			<th scope="col">Descrição</th>
-			<th scope="col">Ações</th>
-		</tr>
-	</thead>
-	<tbody class="table-group-divider">
-		@foreach (var linha in Model)
-		{
-			<tr>
-				<td hidden>@linha.Id</td>
-				<td hidden>@linha.IsActive</td>
-				<td>@linha.Name</td>
-				<td>@linha.Price.ToString("C")</td>
-				<td>@linha.Quantity</td>
-				<td>@linha.Description</td>
-				<td>
-					<button type="button" class="btn btn-primary" @*data-bs-toggle="modal"*@ @*data-bs-target="#modalProduto"*@ onclick="AbrirModal()" data-id="@linha.Id"
-						data-name="@linha.Name" data-price="@linha.Price" data-quantity="@linha.Quantity" data-description="@linha.Description" data-active="@linha.IsActive">Alterar</button>
-					<button type="button" class="btn btn-danger">Excluir</button>
-				</td>
-			</tr>
-		}
-	</tbody>
+    <thead>
+        <tr>
+            <th scope="col" hidden>id</th>
+            <th scope="col" hidden>ativo</th>
+            <th scope="col">Código</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Preço</th>
+            <th scope="col">Quantidade (Un.)</th>
+            <th scope="col">Descrição</th>
+            <th scope="col">Ações</th>
+        </tr>
+    </thead>
+    <tbody class="table-group-divider">
+        @foreach (var linha in Model)
+        {
+            <tr>
+                <td hidden>@linha.Id</td>
+                <td hidden>@linha.IsActive</td>
+                <td>@linha.Code</td>
+                <td>@linha.Name</td>
+                <td>@linha.Price.ToString("C")</td>
+                <td>@linha.Quantity</td>
+                <td>@linha.Description</td>
+                <td>
+                    <button type="button" class="btn btn-primary edit" data-bs-toggle="modal" data-bs-target="#modalProduto"
+                            data-id="@linha.Id" data-name="@linha.Name" data-price="@linha.Price" data-quantity="@linha.Quantity" data-description="@linha.Description" data-active="@linha.IsActive" data-code="@linha.Code">
+                        Alterar
+                    </button>
+                    <button type="button" data-id="@linha.Id" data-name="@linha.Name" class="btn btn-danger delete" data-bs-toggle="modal" data-bs-target="#modalExcluir">Excluir</button>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 
+@*Modal de Salvamento*@
 <div class="modal fade" id="modalProduto">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Produto</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-			</div>
-			<div class="modal-body">
-				<div class="mb-3">
-					<input type="hidden" id="hddnId" />
-					<div class="col-12">
-						<input class="form-control" type="text" id="txtNomeProduto" placeholder="Nome" value="" />
-					</div>
-				</div>
-				<div class="mb-3">
-					<div class="col-3">
-						<input class="form-control" id="txtQuantidadeProduto" placeholder="Quantidade" type="number" />
-					</div>
-					<div class="col-3">
-						<input class="form-control" id="txtPrecoProduto" placeholder="Preço" type="text" />
-					</div>
-				</div>
-				<div class="mb-3">
-					<div class="col-6">
-						<textarea class="form-control" id="txtDescricaoProduto" placeholder="Descrição"></textarea>
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-primary">Salvar</button>
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Produto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="hddnId" />
+                    <div class="col">
+                        <input class="form-control" type="text" id="txtNomeProduto" placeholder="Nome" value="" />
+                    </div>
+                    <div class="col">
+                        <input class="form-control" type="text" id="txtCodigoProduto" placeholder="Código" value="" />
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col">
+                        <input class="form-control" id="txtQuantidadeProduto" placeholder="Quantidade" type="number" />
+                    </div>
+                    <div class="col">
+                        <input class="form-control" id="txtPrecoProduto" placeholder="Preço" type="text" />
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="btn-check" id="btn-check-outlined">
+                            <label class="btn btn-outline-primary" for="btn-check-outlined" id="lblStatusAtivo"></label>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col">
+                        <textarea class="form-control" id="txtDescricaoProduto" placeholder="Descrição"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="btnSalvar">Salvar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
 </div>
-
+@*Modal de Salvamento*@
+@*Modal de Exclusão*@
+<div class="modal fade" id="modalExcluir">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" id="nomeProduto">
+                <h5 class="modal-title"><span id="lblNomeProdutoExclusao"></span></h5>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <h6>Deseja mesmo excluir este produto?</h6>
+                    <input type="hidden" id="idExclusao" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnConfirmarDelete">Excluir</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*Modal de Exclusão*@
 @section scripts{
-	<script>
-		function transportarDadosModal(){
-			//var id = $(this).attr("data-id");
-			//var name = $(this).attr("data-name");
-			//var price = $(this).attr("data-price");
-			//var quantity = $(this).attr("data-quantity");
-			//var description = $(this).attr("data-description");
-			//var active = $(this).attr("data-active");
+    <script>
+        $("#btnIncluirProduto").on("click", function () {
+            document.getElementById("hddnId").value = 0;
+            document.getElementById("txtNomeProduto").value = "";
+            document.getElementById("txtQuantidadeProduto").value = "";
+            document.getElementById("txtPrecoProduto").value = "";
+            document.getElementById("txtDescricaoProduto").value = "";
 
-			document.getElementById("hddnId").val($(this).attr("data-id"));
-			document.getElementById("txtNomeProduto").val($(this).attr("data-name"));
-			document.getElementById("txtQuantidadeProduto").val($(this).attr("data-quantity"));
-			document.getElementById("txtPrecoProduto").val($(this).attr("data-price"));
-			document.getElementById("txtDescricaoProduto").val($(this).attr("data-description"));
-		}
+            changeTextActiveButton("False");
+        });
 
+        $(".edit").on("click", function () {
+            document.getElementById("hddnId").value = $(this).attr("data-id");
+            document.getElementById("txtNomeProduto").value = $(this).attr("data-name");
+            document.getElementById("txtCodigoProduto").value = $(this).attr("data-code");
+            document.getElementById("txtQuantidadeProduto").value = $(this).attr("data-quantity");
+            document.getElementById("txtPrecoProduto").value = $(this).attr("data-price");
+            document.getElementById("txtDescricaoProduto").value = $(this).attr("data-description");
 
+            changeTextActiveButton($(this).attr("data-active"));
+        });
 
+        $("#btn-check-outlined").on("click", function () {
+            changeTextActiveButton(this.checked);
+        });
 
-		$(function () {
-			$(".edit").click(function () {
-				var id = $(this).attr("data-id");
-				alert(id);
-				$("#modal").load("Edit?id=" + id, function () {
-					$("#modal").modal();
-				})
-			});
+        $(".delete").on("click", function () {
+            document.getElementById("idExclusao").value = $(this).attr("data-id");
+            $("#lblNomeProdutoExclusao").text($(this).attr("data-name"));
+        });
 
-			$(".delete").click(function () {
-				var id = $(this).attr("data-id");
-				alert(id);
-				$("#modal").load("Delete?id=" + id, function () {
-					$("#modal").modal();
-				})
-			});
+        $("#btnConfirmarDelete").on("click", function () {
+            var id = document.getElementById("idExclusao").value;
+            enviarReqHttp("DELETE", "produtos/" + id, id);
+        });
 
-			$(".create").click(function () {
-				$("#modal").load("Create", function () {
-					$("#modal").modal();
-				})
-			});
-		})
-	</script>
+        function changeTextActiveButton(status) {
+            var btn = document.getElementById("btn-check-outlined");
+
+            if (status == "True" || status == true) {
+                $("#lblStatusAtivo").text("Inativar");
+                btn.checked = true;
+            } else if (status == "False" || status == false) {
+                $("#lblStatusAtivo").text("Ativar");
+                btn.checked = false;
+            }
+        }
+
+        $("#btnSalvar").on("click", function () {
+            var product = {
+                Id: document.getElementById("hddnId").value,
+                Name: document.getElementById("txtNomeProduto").value,
+                Code: document.getElementById("txtCodigoProduto").value,
+                Quantity: document.getElementById("txtQuantidadeProduto").value,
+                Price: document.getElementById("txtPrecoProduto").value,
+                Description: document.getElementById("txtDescricaoProduto").value,
+                IsActive: document.getElementById("btn-check-outlined").value
+            }
+
+            enviarReqHttp("POST", "produtos", product);
+        });
+
+        function enviarReqHttp(methodType, route, object) {
+            $.ajax({
+                type: methodType,
+                url: route,
+                data: object,
+                success: function (result) {
+                    console.log(result);
+                },
+                error: function (result, status) {
+                    console.log(result);
+                }
+            });
+        }
+    </script>
 }

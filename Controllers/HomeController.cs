@@ -21,31 +21,6 @@ namespace LojaDiversidadesFront.Controllers
 
 		public async Task<IActionResult> Index()
 		{
-			var tab = new DataTable();
-
-			try
-			{
-				using var client = new HttpClient();
-				client.BaseAddress = new Uri(baseUrl);
-				client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-				HttpResponseMessage getData = await client.GetAsync("Produtos");
-
-				if (getData.IsSuccessStatusCode)
-				{
-					string retorno = getData.Content.ReadAsStringAsync().Result;
-					tab = JsonConvert.DeserializeObject<DataTable>(retorno);
-				}
-				else
-				{
-
-				}
-			}
-			catch (Exception)
-			{
-
-			}
 			return View();
 		}
 		public IActionResult Privacy() => View();

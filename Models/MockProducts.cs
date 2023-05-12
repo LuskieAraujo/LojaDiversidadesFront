@@ -12,7 +12,8 @@ public class MockProduct
 				Name = "Papel A4",
 				Description = "Folha de sulfite de tamanho A4.",
 				Price = 1.25f,
-				Quantity = 1000
+				Quantity = 1000,
+				IsActive = true
 			},
 			new Product
 			{
@@ -20,7 +21,8 @@ public class MockProduct
 				Name = "Fita Adesiva",
 				Description = "Fita auto-colante.",
 				Price = 2.5f,
-				Quantity = 100
+				Quantity = 100,
+				IsActive = false
 			},
 			new Product
 			{
@@ -28,7 +30,8 @@ public class MockProduct
 				Name = "Caneta Azul",
 				Description = "Caneta esferográfica.",
 				Price = 1.5f,
-				Quantity = 50
+				Quantity = 50,
+				IsActive = false
 			},
 			new Product
 			{
@@ -36,7 +39,8 @@ public class MockProduct
 				Name = "Lápis Preto",
 				Description = "Lápis grafite Nº2B.",
 				Price = 1,
-				Quantity = 1500
+				Quantity = 1500,
+				IsActive = true
 			}
 		};
 	}

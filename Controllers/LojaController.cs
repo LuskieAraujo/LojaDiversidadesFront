@@ -1,49 +1,58 @@
 ﻿using LojaDiversidadesFront.Models;
+using LojaDiversidadesFront.Services;
 using LojaDiversidadesFront.Settings;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System.Diagnostics;
-using System.Net.Http.Headers;
 
 namespace LojaDiversidadesFront.Controllers;
 
+[Route("produtos")]
 public class LojaController : Controller
 {
+	private readonly ProdutoService produtoService = new();
+
 	public IActionResult Loja() => View(new List<Product>());
+
+	[HttpGet]
 	public async Task<IActionResult> Produtos()
 	{
-		ViewData.Model = await ListarProdutos();
-		return View(InternalRoutes.Estoque().ToString());
+		try
+		{
+			ViewData.Model = await produtoService.Listar();
+			return View(InternalRoutes.Estoque().ToString());
+		}
+		catch (Exception)
+		{
+			return StatusCode(500);
+		}
+	}
+
+	[HttpPost]
+	public async Task<ActionResult> SalvarProduto(Product produto)
+	{
+		try
+		{
+			return View(produto.Id == 0 ? await produtoService.Incluir(produto) : await produtoService.Alterar(produto));
+		}
+		catch (Exception)
+		{
+			return StatusCode(500);
+		}
+	}
+
+	[HttpDelete("{id}")]
+	public async Task<ActionResult> ExcluirProduto(int id)
+	{
+		try
+		{
+			return id != 0 ? View(await produtoService.Excluir(id)) : View();
+		}
+		catch (Exception)
+		{
+			return StatusCode(500);
+		}
 	}
 
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public IActionResult Error() => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-
-	public async Task<List<Product>> ListarProdutos()
-	{
-		try
-		{
-			using var client = new HttpClient();
-			client.BaseAddress = new Uri(ExternalRoutes.RotaAPI());
-			client.DefaultRequestHeaders.Accept.Clear();
-			client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-			HttpResponseMessage getData = await client.GetAsync("produtos");
-
-			return getData.IsSuccessStatusCode
-				? JsonConvert.DeserializeObject<List<Product>>(getData.Content.ReadAsStringAsync().Result)
-				: await new MockProduct().Products();
-
-		}
-		catch (Exception)
-		{
-			//return new List<Product>();
-			return await new MockProduct().Products();
-		}
-	}
-
-	public async Task<ActionResult> AdicionarProduto()
-	{
-		return View();
-	}
 }
